@@ -17,7 +17,7 @@ const (
 )
 
 // Creates the encoder and enriches the message with :
-// - commandLine : this program's command line and arguments
+// - process : current process path
 // - nodeNumber : when using avalanche-network-runner - extracted from command line arguments
 // - app : "avalancheGo"
 func NewSeqEncoder(levelEncoder zapcore.LevelEncoder) zapcore.Encoder {
@@ -38,9 +38,14 @@ func NewSeqEncoder(levelEncoder zapcore.LevelEncoder) zapcore.Encoder {
 	}
 	encoder := zapcore.NewJSONEncoder(encoderConfig)
 
-	commandLine := fmt.Sprint(os.Args)
-	encoder.AddString("commandLine", commandLine)
+	process, err := os.Executable()
+	if err != nil {
+		process = "error in os.Executable() : " + err.Error()
+	}
 
+	encoder.AddString("process", process)
+
+	commandLine := fmt.Sprint(os.Args)
 	compiledRegexp, err := regexp.Compile("node[0-9]+")
 	var nodeNumber string
 	if err != nil {
