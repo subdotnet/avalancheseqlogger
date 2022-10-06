@@ -23,7 +23,7 @@ docker run \
   -d \
   -e ACCEPT_EULA=Y \
   -v /tmp/seq:/data \
-  -p 80:80 \
+  -p 18080:80 \
   -p 5341:5341 \
   datalust/seq
 ```
